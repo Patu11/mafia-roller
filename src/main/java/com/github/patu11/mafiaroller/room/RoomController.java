@@ -3,12 +3,10 @@ package com.github.patu11.mafiaroller.room;
 import com.github.patu11.mafiaroller.dto.RoomDTO;
 import com.github.patu11.mafiaroller.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +25,11 @@ public class RoomController {
     public ResponseEntity<?> getAll() {
         List<RoomDTO> rooms = this.roomService.getAllRooms();
         return ResponseEntity.ok(rooms);
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createRoom(@RequestBody RoomData roomData) {
+        this.roomService.addRoom(roomData);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
