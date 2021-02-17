@@ -1,13 +1,12 @@
 package com.github.patu11.mafiaroller.dto;
 
+import com.github.patu11.mafiaroller.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,4 +17,5 @@ public class RoomDTO {
 
     private String name;
 
+    private List<UserDTO> users;
 }
