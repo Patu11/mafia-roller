@@ -4,38 +4,37 @@ import com.github.patu11.mafiaroller.room.Room;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 @Entity
-@Table(name = "users")
+@Table(name = "player")
 public class User {
-    @Id
-    private String username;
+	@Id
+	private String username;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_code")
-    private Room room;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "room_code")
+	private Room room;
 
-    public User() {
+	private String role;
 
-    }
+	private boolean dead;
 
-    public String getUsername() {
-        return username;
-    }
+	public User() {
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+	}
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "username='" + username + '\'' +
-                '}';
-    }
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
 }

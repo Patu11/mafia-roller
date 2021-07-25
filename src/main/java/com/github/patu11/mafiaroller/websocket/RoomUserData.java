@@ -1,4 +1,4 @@
-package com.github.patu11.mafiaroller.room;
+package com.github.patu11.mafiaroller.websocket;
 
 import com.sun.istack.NotNull;
 import lombok.*;
@@ -8,11 +8,13 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class RoomData {
-
+public class RoomUserData {
 	@NotNull
 	private String name;
 
 	@NotNull
 	private String code;
+
+	@NotNull
+	private String username;
 }
