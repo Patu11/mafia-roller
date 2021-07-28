@@ -13,4 +13,5 @@ public class UserDTO {
 	private String roomCode;
 	private String role;
 	private boolean dead;
+	private boolean started;
 }

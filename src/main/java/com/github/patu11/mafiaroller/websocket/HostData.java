@@ -5,19 +5,14 @@ import lombok.*;
 
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-public class RoomUserData {
-	@NotNull
-	private String name;
+public class HostData {
 
 	@NotNull
-	private String code;
+	private String currentHost;
 
 	@NotNull
-	private String username;
-
-	@NotNull
-	private boolean started;
+	private String newHost;
 }

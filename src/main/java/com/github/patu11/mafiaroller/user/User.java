@@ -25,6 +25,8 @@ public class User {
 	private String role;
 
 	private boolean dead;
+	
+	private boolean started;
 
 	public User() {
 

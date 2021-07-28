@@ -39,7 +39,7 @@ public class RoomService {
 	@Transactional(readOnly = true)
 	public List<RoomDTO> getAllRooms() {
 		List<RoomDTO> list = this.roomRepository.findAll().stream()
-				.map(room -> new RoomDTO(room.getCode(), room.getName(), this.userService.getAllUsersByRoomCode(room.getCode())))
+				.map(room -> new RoomDTO(room.getCode(), room.getName(), room.isStarted(), this.userService.getAllUsersByRoomCode(room.getCode())))
 				.collect(Collectors.toList());
 
 		if (list.isEmpty()) {
@@ -57,6 +57,9 @@ public class RoomService {
 		if (r.isPresent()) {
 			Room room = r.get();
 			room.deleteUser(user);
+			user.setStarted(false);
+			user.setRole(MafiaRoles.NONE.name());
+			user.setDead(false);
 			this.roomRepository.save(room);
 			this.userService.updateUser(user);
 		} else {
@@ -84,24 +87,6 @@ public class RoomService {
 		}
 	}
 
-//	@Transactional
-//	public void addRoomWithCode(RoomUserData roomUserData) {
-//		Room newRoom = new Room();
-//		newRoom.setName(roomUserData.getName());
-//		newRoom.setCode(roomUserData.getCode());
-//
-//		User user = this.userService.getUserByUsername(roomUserData.getUsername());
-//
-//		newRoom.addUser(user);
-//
-//		this.roomRepository.save(newRoom);
-//
-////		UserData userData = new UserData();
-////		userData.setUsername(roomUserData.getUsername());
-////		userData.setRoomCode(newRoom.getCode());
-////		this.joinUserToRoom(userData);
-//	}
-
 	@Transactional
 	public void addRoomWithCode(RoomUserData roomUserData) {
 		Room newRoom = new Room();
@@ -112,17 +97,11 @@ public class RoomService {
 		UserData userData = new UserData();
 		userData.setUsername(roomUserData.getUsername());
 		userData.setRoomCode(newRoom.getCode());
-		userData.setRole("HOST");
+		userData.setRole(MafiaRoles.HOST.name());
+		userData.setStarted(roomUserData.isStarted());
 		this.joinUserToRoom(userData);
 	}
-
-//	@Transactional(readOnly = true)
-//	public Future<Room> getRoom(String code) {
-//		Optional<Room> room = this.roomRepository.findById(code);
-//		if (room.isPresent()) return new AsyncResult<>(room.get());
-//		else throw new NotFoundException("Room not found");
-//	}
-
+	
 	@Transactional(readOnly = true)
 	public RoomDTO getRoomByCode(String code) {
 		Optional<Room> optional = this.roomRepository.findById(code);
@@ -132,7 +111,7 @@ public class RoomService {
 
 		List<UserDTO> users = this.userService.getAllUsersByRoomCode(code);
 
-		return new RoomDTO(optional.get().getCode(), optional.get().getName(), users);
+		return new RoomDTO(optional.get().getCode(), optional.get().getName(), optional.get().isStarted(), users);
 	}
 
 

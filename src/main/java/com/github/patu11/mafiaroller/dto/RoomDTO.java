@@ -13,9 +13,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoomDTO {
-    private String code;
+	private String code;
 
-    private String name;
+	private String name;
 
-    private List<UserDTO> users;
+	private boolean started;
+
+	private List<UserDTO> users;
 }

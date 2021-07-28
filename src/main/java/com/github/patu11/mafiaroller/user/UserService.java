@@ -5,6 +5,7 @@ import com.github.patu11.mafiaroller.dto.UserDTO;
 import com.github.patu11.mafiaroller.room.Room;
 import com.github.patu11.mafiaroller.room.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,11 @@ public class UserService {
 		Optional<User> user = this.userRepository.findById(username);
 		if (user.isPresent()) return user.get();
 		else throw new NotFoundException("User not found");
+	}
+
+	@Transactional(readOnly = true)
+	public List<User> getAllRawUsersFromRoom(String roomCode) {
+		return this.userRepository.findAllByRoomCode(roomCode);
 	}
 
 	@Transactional(readOnly = true)
@@ -62,15 +68,24 @@ public class UserService {
 	@Transactional(readOnly = true)
 	public List<UserDTO> getAllUsers() {
 		return this.userRepository.findAll().stream()
-				.map(user -> new UserDTO(user.getUsername(), (user.getRoom() == null) ? "" : user.getRoom().getCode(), user.getRole(), user.isDead()))
+				.map(user -> new UserDTO(user.getUsername(), (user.getRoom() == null) ? "" : user.getRoom().getCode(), user.getRole(), user.isDead(), user.isStarted()))
 				.collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
 	public List<UserDTO> getAllUsersByRoomCode(String roomCode) {
-		return this.userRepository.findAllByRoomCode(roomCode).stream()
-				.map(user -> new UserDTO(user.getUsername(), user.getRoom().getCode(), user.getRole(), user.isDead()))
+
+		return this.userRepository.findAllByRoomCodeOrderByUsername(roomCode).stream()
+				.map(user -> new UserDTO(user.getUsername(), user.getRoom().getCode(), user.getRole(), user.isDead(), user.isStarted()))
 				.collect(Collectors.toList());
+//		return this.userRepository.findAllByRoomCode(roomCode).stream()
+//				.map(user -> new UserDTO(user.getUsername(), user.getRoom().getCode(), user.getRole(), user.isDead(), user.isStarted()))
+//				.collect(Collectors.toList());
+	}
+
+	@Transactional
+	public void deleteAllUsers() {
+		this.userRepository.deleteAll();
 	}
 
 }

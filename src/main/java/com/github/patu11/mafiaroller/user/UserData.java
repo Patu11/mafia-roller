@@ -12,7 +12,7 @@ public class UserData {
 
 	@NotNull
 	private String username;
-
+	
 	@NotNull
 	private String roomCode;
 
@@ -21,5 +21,8 @@ public class UserData {
 
 	@NotNull
 	private boolean dead;
+
+	@NotNull
+	private boolean started;
 
 }

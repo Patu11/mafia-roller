@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
-	private UserService userService;
+	private final UserService userService;
 
 	@Autowired
 	public UserController(UserService userService) {
@@ -45,5 +45,11 @@ public class UserController {
 	public ResponseEntity<?> addUser(@RequestBody UserData userData) {
 		this.userService.addUser(userData);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
+	}
+
+	@GetMapping("/delete")
+	public ResponseEntity<?> deleteAll() {
+		this.userService.deleteAllUsers();
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 }

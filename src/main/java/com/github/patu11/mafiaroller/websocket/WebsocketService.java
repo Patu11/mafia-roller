@@ -1,5 +1,6 @@
 package com.github.patu11.mafiaroller.websocket;
 
+import com.github.patu11.mafiaroller.MafiaRoles;
 import com.github.patu11.mafiaroller.NotFoundException;
 import com.github.patu11.mafiaroller.RoleGenerator;
 import com.github.patu11.mafiaroller.dto.RoomDTO;
@@ -34,6 +35,39 @@ public class WebsocketService {
 		return this.userService.getAllUsersByRoomCode(roomCode);
 	}
 
+	public List<UserDTO> newGame(String roomCode) {
+		List<User> users = this.userService.getAllRawUsersFromRoom(roomCode);
+
+		for (User u : users) {
+			if (!u.getRole().equals(MafiaRoles.HOST.name())) {
+				u.setRole(MafiaRoles.NONE.name());
+				u.setDead(false);
+				u.setStarted(false);
+			} else {
+				u.setStarted(false);
+			}
+		}
+
+		this.userService.updateAll(users);
+		return this.userService.getAllUsersByRoomCode(roomCode);
+	}
+
+	public List<UserDTO> makeHost(HostData hostData, String roomCode) {
+		User currentHost = this.userService.getUserByUsername(hostData.getCurrentHost());
+		User newHost = this.userService.getUserByUsername(hostData.getNewHost());
+
+		currentHost.setRole(MafiaRoles.NONE.name());
+		newHost.setRole(MafiaRoles.HOST.name());
+
+		List<User> toUpdate = new ArrayList<>();
+
+		toUpdate.add(currentHost);
+		toUpdate.add(newHost);
+		this.userService.updateAll(toUpdate);
+
+		return this.userService.getAllUsersByRoomCode(roomCode);
+	}
+
 	public List<UserDTO> changeDead(UserData userData) {
 		User user = this.userService.getRawUserByUsername(userData.getUsername());
 		user.setDead(userData.isDead());
@@ -49,6 +83,13 @@ public class WebsocketService {
 
 	public List<UserDTO> leave(UserData userData) {
 		this.roomService.removeUserFromRoom(userData);
+		List<User> users = this.userService.getAllRawUsersFromRoom(userData.getRoomCode());
+		if (userData.getRole().equals(MafiaRoles.HOST.name()) && users.size() > 0) {
+			users.get(0).setRole(MafiaRoles.HOST.name());
+		}
+
+		this.userService.updateAll(users);
+
 		return this.userService.getAllUsersByRoomCode(userData.getRoomCode());
 	}
 
@@ -62,7 +103,8 @@ public class WebsocketService {
 		List<User> toUpdate = new ArrayList<>();
 
 		for (UserDTO u : generated) {
-			toUpdate.add(new User(u.getUsername(), r, u.getRole(), u.isDead()));
+			u.setStarted(true);
+			toUpdate.add(new User(u.getUsername(), r, u.getRole(), u.isDead(), u.isStarted()));
 		}
 
 		this.userService.updateAll(toUpdate);

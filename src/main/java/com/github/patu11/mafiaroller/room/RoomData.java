@@ -15,4 +15,7 @@ public class RoomData {
 
 	@NotNull
 	private String code;
+
+	@NotNull
+	boolean started;
 }

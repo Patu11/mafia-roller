@@ -24,7 +24,8 @@ public class Room {
 	//	@OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
 	@OneToMany(mappedBy = "room", fetch = FetchType.EAGER)
 	private Set<User> users = new HashSet<>();
-
+	
+	private boolean started;
 
 	public Room(String name) {
 		this.name = name;

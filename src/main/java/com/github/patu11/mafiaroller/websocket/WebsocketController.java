@@ -34,6 +34,18 @@ public class WebsocketController {
 		return this.websocketService.sendUsersList(roomCode);
 	}
 
+	@MessageMapping("/send/new/{roomCode}")
+	@SendTo("/game/{roomCode}")
+	public List<UserDTO> newGame(@DestinationVariable String roomCode) {
+		return this.websocketService.newGame(roomCode);
+	}
+
+	@MessageMapping("/send/host/{roomCode}")
+	@SendTo("/game/{roomCode}")
+	public List<UserDTO> makeHost(@DestinationVariable String roomCode, HostData hostData) {
+		return this.websocketService.makeHost(hostData, roomCode);
+	}
+
 	@MessageMapping("/send/dead/{roomCode}")
 	@SendTo("/game/{roomCode}")
 	public List<UserDTO> changeDead(@DestinationVariable String roomCode, UserData user) {
