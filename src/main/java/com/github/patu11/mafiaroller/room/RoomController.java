@@ -4,6 +4,7 @@ import com.github.patu11.mafiaroller.dto.RoomDTO;
 import com.github.patu11.mafiaroller.user.UserData;
 import com.github.patu11.mafiaroller.websocket.RoomUserData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "https://mafia-roller.herokuapp.com")
+@CrossOrigin(origins = "${app.url}")
 @RequestMapping("/rooms")
 public class RoomController {
 

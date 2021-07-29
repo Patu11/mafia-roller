@@ -1,7 +1,10 @@
 package com.github.patu11.mafiaroller.config;
 
 import com.github.patu11.mafiaroller.websocket.WebSocketEventListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -16,6 +19,10 @@ import java.util.Map;
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+	@Autowired
+	private Environment env;
+
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
 		config.enableSimpleBroker("/game");    //to subscribe
@@ -24,6 +31,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/app").setAllowedOrigins("https://mafia-roller.herokuapp.com").withSockJS();    //to create connection
+
+		registry.addEndpoint("/app").setAllowedOrigins(env.getProperty("app.url")).withSockJS();    //to create connection
 	}
 }
