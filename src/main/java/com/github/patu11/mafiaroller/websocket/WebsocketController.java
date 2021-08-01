@@ -64,10 +64,10 @@ public class WebsocketController {
 		return this.websocketService.leave(user);
 	}
 
-	@MessageMapping("/send/start/{roomCode}")    //to send data
+	@MessageMapping("/send/start/{roomCode}/{freak}")    //to send data
 	@SendTo("/game/{roomCode}")    //to subscribe
-	public List<UserDTO> startGame(@DestinationVariable String roomCode, UserData user) {
-		return this.websocketService.startGame(user);
+	public List<UserDTO> startGame(@DestinationVariable String roomCode, @DestinationVariable boolean freak, UserData user) {
+		System.out.println(freak);
+		return this.websocketService.startGame(user, freak);
 	}
-
 }

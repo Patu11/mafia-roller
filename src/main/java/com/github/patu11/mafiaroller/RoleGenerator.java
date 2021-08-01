@@ -22,8 +22,8 @@ public class RoleGenerator {
 		this.numberOfPlayers = users.size();
 	}
 
-	public List<UserDTO> getGeneratedUsersRoles() {
-		List<String> freeRoles = this.generateRoles(this.numberOfPlayers);
+	public List<UserDTO> getGeneratedUsersRoles(boolean withFreak) {
+		List<String> freeRoles = this.generateRoles(this.numberOfPlayers, withFreak);
 
 		for (UserDTO u : this.users) {
 			if (!u.getRole().equals(MafiaRoles.HOST.name())) {
@@ -37,21 +37,25 @@ public class RoleGenerator {
 		return this.users;
 	}
 
-	private List<String> generateRoles(int number) {
+	private List<String> generateRoles(int number, boolean withFreak) {
 		List<String> freeRoles = new ArrayList<>();
 
 		int numberOfMafia = (int) Math.round(Math.sqrt(number));
-		int numberOfVilligers = number - numberOfMafia - 3;
+		int numberOfVillagers = number - numberOfMafia - 2;
+
+		if (withFreak) {
+			numberOfVillagers = number - numberOfMafia - 3;
+			freeRoles.add(MafiaRoles.FREAK.name());
+		}
 
 		freeRoles.add(MafiaRoles.GUARD.name());
 		freeRoles.add(MafiaRoles.POLICEMAN.name());
-		freeRoles.add(MafiaRoles.FREAK.name());
 
 		for (int i = 0; i < numberOfMafia; i++) {
 			freeRoles.add(MafiaRoles.MAFIA.name());
 		}
 
-		for (int i = 0; i < numberOfVilligers; i++) {
+		for (int i = 0; i < numberOfVillagers; i++) {
 			freeRoles.add(MafiaRoles.VILLAGER.name());
 		}
 

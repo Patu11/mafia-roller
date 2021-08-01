@@ -93,12 +93,12 @@ public class WebsocketService {
 		return this.userService.getAllUsersByRoomCode(userData.getRoomCode());
 	}
 
-	public List<UserDTO> startGame(UserData userData) {
+	public List<UserDTO> startGame(UserData userData, boolean freak) {
 		List<UserDTO> users = this.userService.getAllUsersByRoomCode(userData.getRoomCode());
 		Room r = this.roomService.getRawRoomByCode(users.get(0).getRoomCode());
 
 		RoleGenerator generator = new RoleGenerator(users);
-		List<UserDTO> generated = generator.getGeneratedUsersRoles();
+		List<UserDTO> generated = generator.getGeneratedUsersRoles(freak);
 
 		List<User> toUpdate = new ArrayList<>();
 
